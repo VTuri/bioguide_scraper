@@ -5,7 +5,7 @@ import sqlite3
 
 def bio_scrapper(url):
     """Scrape the bio of a given person based on the link that the other scraper provides"""
-    # Open the link
+    # Open the link provided by the main scraper
     soup = BeautifulSoup(open(url))
 
     # Search for the part where the bio is and get the text
