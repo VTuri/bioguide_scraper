@@ -12,7 +12,7 @@ def bio_scrapper(url):
     all_data = soup.find_all('p')
     text = all_data[0].get_text()
 
-    # Create a single line from the text
+    # Create a single line from the text.
     text = text.replace('\n', '')
 
     # Regex to delete all the multiple whitespaces
