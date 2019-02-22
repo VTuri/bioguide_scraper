@@ -6,13 +6,13 @@ import sqlite3
 def bio_scrapper(url):
     """Scrape the bio of a given person based on the link that the other scraper provides"""
     # Open the link provided by the main scraper
-    soup = BeautifulSoup(open(url))
+    soup = BeautifulSoup(url.read())
 
     # Search for the part where the bio is and get the text
     all_data = soup.find_all('p')
     text = all_data[0].get_text()
 
-    # Create a single line from the text.
+    # Create a single line from the text
     text = text.replace('\n', '')
 
     # Regex to delete all the multiple whitespaces
@@ -29,7 +29,7 @@ def db_connection(db_name, data):
     # Loop through the data and write it in the db
     for person in data:
         # list_of_values = list(person.values())
-        write_db(db_name,person.values())
+        write_db(db_name, person.values())
 
     # After commit (every change is saved) we close the connection
     conn.close()
@@ -48,6 +48,7 @@ def write_db(db_name, data_list):
     state = data_list[7]
     congress_year = data_list[8]
     link = data_list[9]
+    bio = data_list[10]
 
     # connect to db, default setting = rwc (read/write/create)
     conn = sqlite3.connect(db_name)
@@ -56,17 +57,17 @@ def write_db(db_name, data_list):
     c = conn.cursor()
 
     # Create a table if it doesnt exist with the columns
-    # TODO Add bio if it is implemented
     try:
         c.execute(
             '''CREATE TABLE person (id, first_name, last_name, 
-            born, death, occupation, party, state, congress_year, link)''')
+            born, death, occupation, party, state, congress_year, link, bio)''')
+
     except sqlite3.OperationalError:
         pass
 
     # Insert a row of data
     c.execute(
-        '''INSERT INTO person VALUES (?,?,?,?,?,?,?,?,?,?);''', (
-            person_id, first_name, last_name, born, death, occupation, party, state, congress_year, link))
+        '''INSERT INTO person VALUES (?,?,?,?,?,?,?,?,?,?,?);''', (
+            person_id, first_name, last_name, born, death, occupation, party, state, congress_year, link, bio))
     # Save the changes
     conn.commit()
